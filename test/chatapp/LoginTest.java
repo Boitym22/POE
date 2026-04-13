@@ -45,8 +45,7 @@ public class LoginTest {
         String[] args = null;
         Login.main(args);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+       
 
     /**
      * Test of checkUsername method, of class Login.
@@ -105,7 +104,7 @@ public class LoginTest {
         boolean result = instance.registerUser(firstName, username, password, cell);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -121,7 +120,7 @@ public class LoginTest {
         boolean result = instance.login(loginUser, loginPass);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -136,7 +135,5 @@ public class LoginTest {
         boolean result = instance.returnLoginStatus(b);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-    
-}
+        
+    }}}

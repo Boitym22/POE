@@ -24,11 +24,20 @@ public class ChatApp {
         Scanner input = new Scanner(System.in);
         Login login = new Login();
 
-        System.out.println("=== REGISTRATION ===");
+        System.out.println("=====================================");
+System.out.println("        💬 CHAT APPLICATION 💬       ");
+System.out.println("=====================================");
+System.out.println("       Welcome to Chat App!");
+System.out.println("=====================================\n");
+
+        System.out.println("======= REGISTRATION PROCESS =======");
 
         System.out.print("Enter first name: ");
         String firstName = input.nextLine();
 
+        System.out.print("Enter last name: ");
+        String lastName = input.nextLine();
+        
         String username;
         while (true) {
             System.out.print("Enter username: ");
@@ -71,7 +80,7 @@ public class ChatApp {
         System.out.println(login.registerUser(firstName, username, password, cell));
 
         // LOGIN
-        System.out.println("\n=== LOGIN ===");
+        System.out.println("\n=== LOGIN PROCESS ===");
 
         int attempts = 3;
 

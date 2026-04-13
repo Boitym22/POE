@@ -10,11 +10,20 @@ public class Login {
 
         Scanner input = new Scanner(System.in);
         Login login = new Login();
-
+System.out.println("=====================================");
+System.out.println("        💬 CHAT APPLICATION 💬        ");
+System.out.println("=====================================");
+System.out.println("       Welcome to Chat App!");
+System.out.println("=====================================\n");
+        
+        
         System.out.println("=== REGISTRATION ===");
 
         System.out.print("Enter first name: ");
         String firstName = input.nextLine();
+        
+        System.out.print("Enter last name: ");
+        String lastName = input.nextLine();
 
         String username;
         while (true) {
@@ -38,7 +47,7 @@ public class Login {
                 System.out.println("Password successfully captured.");
                 break;
             } else {
-                System.out.println("Password is not correctly formatted, please ensure it meets all requirements.");
+                System.out.print("Password is not correctly formatted, please ensure it meets all requirements.");
             }
         }
 
@@ -83,31 +92,52 @@ public class Login {
         if (attempts == 0) {
             System.out.println("Too many failed attempts. Access denied.");
         }
+        if (login.registerUser(firstName, username, password, cell)) {
+    System.out.println("\n🎉 Registration Successful!");
+    System.out.println("Welcome, " + firstName + " 👋");
+} else {
+    System.out.println("\n⚠ Registration Failed. Please try again.");
+}
     }
+    private Object storedPass;
+    private Object storedUser;
+    private boolean status;
 
     boolean checkUsername(String username) {
         return username.contains("_") && username.length() <= 5;
     }
 
-    boolean checkPasswordComplexity(String password) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+   boolean checkPasswordComplexity(String password) {
+        if (password == null) return false;
+        if (password.length() < 8) return false;
+        boolean hasUpper = false;
+        boolean hasDigit = false;
+        boolean hasSpecial = false;
+        for (char c : password.toCharArray()) {
+            if (Character.isUpperCase(c)) hasUpper = true;
+            else if (Character.isDigit(c)) hasDigit = true;
+            else if (!Character.isLetterOrDigit(c)) hasSpecial = true;
+        }
+        return hasUpper && hasDigit && hasSpecial;
     }
 
     boolean checkCellPhoneNumber(String cell) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+        return cell.matches("^\\+27\\d{9}$"); // SA format: +27 followed by 9 digits
+}
 
     boolean registerUser(String firstName, String username, String password, String cell) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+         return checkUsername(username) &&
+           checkPasswordComplexity(password) &&
+           checkCellPhoneNumber(cell);
+}
 
     boolean login(String loginUser, String loginPass) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+          return loginUser.equals(storedUser) && loginPass.equals(storedPass);
+}
 
     boolean returnLoginStatus(boolean b) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+        return status;
+}
 }
 
 
