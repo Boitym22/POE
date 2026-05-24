@@ -1,110 +1,377 @@
 /*
+
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package chatapp;
 
-/**
- *
- * @author Student
- */
-/*pubplic class ChatApp {
+import javax.swing.JOptionPane;
+import java.util.Random;
 
-    public static void main(String[] args) {
-        System.out.println("Hello World!");
-    }
-}
-*/
-import java.util.Scanner;
+// JSON IMPORTS
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+// FILE IMPORTS
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class ChatApp {
 
+    // =========================
+    // GLOBAL VARIABLES
+    // =========================
+
+    static int numMessagesSent = 0;
+
+    static JSONArray messageList = new JSONArray();
+
+    // =========================
+    // MAIN METHOD
+    // =========================
+
     public static void main(String[] args) {
 
-        Scanner input = new Scanner(System.in);
-        Login login = new Login();
+        // =========================
+        // REGISTRATION
+        // =========================
 
-        System.out.println("=====================================");
-System.out.println("        💬 CHAT APPLICATION 💬       ");
-System.out.println("=====================================");
-System.out.println("       Welcome to Chat App!");
-System.out.println("=====================================\n");
+        String firstName = JOptionPane.showInputDialog(
+                "Enter First Name:");
 
-        System.out.println("======= REGISTRATION PROCESS =======");
+        String lastName = JOptionPane.showInputDialog(
+                "Enter Last Name:");
 
-        System.out.print("Enter first name: ");
-        String firstName = input.nextLine();
+        // USERNAME
+        String username = JOptionPane.showInputDialog(
+                """
+                Create Username
 
-        System.out.print("Enter last name: ");
-        String lastName = input.nextLine();
-        
-        String username;
-        while (true) {
-            System.out.print("Enter username: ");
-            username = input.nextLine();
+                Rules:
+                - Must contain _
+                - Must not exceed 5 characters
+                """);
 
-            if (login.checkUsername(username)) {
-                System.out.println("Username successfully captured.");
-                break;
-            } else {
-                System.out.println("Username is not correctly formatted; please ensure it contains '_' and is no more than 5 characters.");
-            }
+        while (!checkUsername(username)) {
+
+            JOptionPane.showMessageDialog(null,
+                    "Username is not correctly formatted.");
+
+            username = JOptionPane.showInputDialog(
+                    "Enter Username Again:");
         }
 
-        String password;
-        while (true) {
-            System.out.print("Enter password: ");
-            password = input.nextLine();
+        JOptionPane.showMessageDialog(null,
+                "Username successfully captured.");
 
-            if (login.checkPasswordComplexity(password)) {
-                System.out.println("Password successfully captured.");
-                break;
-            } else {
-                System.out.println("Password is not correctly formatted, please ensure it meets all requirements.");
-            }
+        // PASSWORD
+        String password = JOptionPane.showInputDialog(
+                """
+                Create Password
+
+                Password must contain:
+                - At least 8 characters
+                - Capital letter
+                - Number
+                - Special character
+                """);
+
+        while (!checkPassword(password)) {
+
+            JOptionPane.showMessageDialog(null,
+                    "Password is not correctly formatted.");
+
+            password = JOptionPane.showInputDialog(
+                    "Enter Password Again:");
         }
 
-        String cell;
-        while (true) {
-            System.out.print("Enter SA cell number (+27...): ");
-            cell = input.nextLine();
+        JOptionPane.showMessageDialog(null,
+                "Password successfully captured.");
 
-            if (login.checkCellPhoneNumber(cell)) {
-                System.out.println("Cell phone number successfully added.");
-                break;
-            } else {
-                System.out.println("Cell number incorrectly formatted or does not contain international code.");
-            }
+        // CELLPHONE
+        String cellphone = JOptionPane.showInputDialog(
+                """
+                Enter cellphone number
+
+                Example:
+                +27831234567
+                """);
+
+        while (!checkCellphone(cellphone)) {
+
+            JOptionPane.showMessageDialog(null,
+                    "Cellphone number incorrectly formatted.");
+
+            cellphone = JOptionPane.showInputDialog(
+                    "Enter cellphone again:");
         }
 
-        System.out.println(login.registerUser(firstName, username, password, cell));
+        JOptionPane.showMessageDialog(null,
+                "Cellphone successfully captured.");
 
+        JOptionPane.showMessageDialog(null,
+                "Registration Successful!");
+
+        // =========================
         // LOGIN
-        System.out.println("\n=== LOGIN PROCESS ===");
+        // =========================
 
-        int attempts = 3;
+        String loginUsername = JOptionPane.showInputDialog(
+                "Enter Username:");
 
-        while (attempts > 0) {
-            System.out.print("Enter username: ");
-            String loginUser = input.nextLine();
+        String loginPassword = JOptionPane.showInputDialog(
+                "Enter Password:");
 
-            System.out.print("Enter password: ");
-            String loginPass = input.nextLine();
+        if (loginUsername.equals(username)
+                && loginPassword.equals(password)) {
 
-            boolean success = login.login(loginUser, loginPass);
+            JOptionPane.showMessageDialog(null,
+                    "Welcome "
+                            + firstName
+                            + " "
+                            + lastName
+                            + ", it is great to see you again.");
 
-            if (success) {
-                System.out.println(login.returnLoginStatus(true));
-                break;
-            } else {
-                attempts--;
-                System.out.println("Username or password incorrect. Attempts left: " + attempts);
+        } else {
+
+            JOptionPane.showMessageDialog(null,
+                    "Username or password incorrect.");
+
+            System.exit(0);
+        }
+
+        // =========================
+        // CHAT MENU
+        // =========================
+
+        boolean running = true;
+
+        while (running) {
+
+            String menu = JOptionPane.showInputDialog(
+                    """
+                    Choose an option:
+
+                    1. Send Message
+                    2. Show recently sent messages
+                    3. Quit
+                    """);
+
+            switch (menu) {
+
+                // =========================
+                // SEND MESSAGE
+                // =========================
+
+                case "1":
+
+                    String recipient = JOptionPane.showInputDialog(
+                            """
+                            Enter recipient number
+
+                            Example:
+                            +27685139480
+                            """);
+
+                    // VALIDATE RECIPIENT
+                    if (!recipient.matches("^\\+27\\d{9}$")) {
+
+                        JOptionPane.showMessageDialog(null,
+                                "Cell number is incorrectly formatted.");
+
+                        break;
+                    }
+
+                    // ENTER MESSAGE
+                    String message = JOptionPane.showInputDialog(
+                            "Enter your message:");
+
+                    // MESSAGE VALIDATION
+                    if (message.length() > 250) {
+
+                        JOptionPane.showMessageDialog(null,
+                                "Please enter a message of less than 250 characters.");
+
+                        break;
+                    }
+
+                    // GENERATE MESSAGE ID
+                    String messageID = generateMessageID();
+
+                    // COUNT MESSAGE
+                    numMessagesSent++;
+
+                    // GENERATE HASH
+                    String messageHash =
+                            createMessageHash(
+                                    messageID,
+                                    numMessagesSent,
+                                    message);
+
+                    // =========================
+                    // JSON STORAGE
+                    // =========================
+
+                    JSONObject messageObject =
+                            new JSONObject();
+
+                    messageObject.put(
+                            "MessageID",
+                            messageID);
+
+                    messageObject.put(
+                            "Recipient",
+                            recipient);
+
+                    messageObject.put(
+                            "Message",
+                            message);
+
+                    messageObject.put(
+                            "MessageHash",
+                            messageHash);
+
+                    // ADD TO ARRAY
+                    messageList.add(messageObject);
+
+                    // SAVE JSON FILE
+                    try {
+
+                        FileWriter file =
+                                new FileWriter("messages.json");
+
+                        file.write(
+                                messageList.toJSONString());
+
+                        file.flush();
+
+                        file.close();
+
+                    } catch (IOException e) {
+
+                        JOptionPane.showMessageDialog(null,
+                                "Error saving messages.");
+                    }
+
+                    // SUCCESS MESSAGE
+                    JOptionPane.showMessageDialog(null,
+                            "Message sent successfully!"
+                                    + "\n\nMessage ID: "
+                                    + messageID
+                                    + "\nMessage Hash: "
+                                    + messageHash
+                                    + "\nMessages Sent: "
+                                    + numMessagesSent);
+
+                    break;
+
+                // =========================
+                // COMING SOON
+                // =========================
+
+                case "2":
+
+                    JOptionPane.showMessageDialog(null,
+                            "Coming Soon.");
+
+                    break;
+
+                // =========================
+                // QUIT
+                // =========================
+
+                case "3":
+
+                    JOptionPane.showMessageDialog(null,
+                            "Goodbye!");
+
+                    running = false;
+
+                    break;
+
+                // =========================
+                // INVALID OPTION
+                // =========================
+
+                default:
+
+                    JOptionPane.showMessageDialog(null,
+                            "Invalid option.");
             }
         }
+    }
 
-        if (attempts == 0) {
-            System.out.println("Too many failed attempts. Access denied.");
-        }
+    // =========================
+    // USERNAME VALIDATION
+    // =========================
+
+    public static boolean checkUsername(String username) {
+
+        return username.contains("_")
+                && username.length() <= 5;
+    }
+
+    // =========================
+    // PASSWORD VALIDATION
+    // =========================
+
+    public static boolean checkPassword(String password) {
+
+        return password.matches(
+                "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=<>?/]).{8,}$");
+    }
+
+    // =========================
+    // CELLPHONE VALIDATION
+    // =========================
+
+    public static boolean checkCellphone(String cellphone) {
+
+        return cellphone.matches("^\\+27\\d{9}$");
+    }
+
+    // =========================
+    // GENERATE MESSAGE ID
+    // =========================
+
+    public static String generateMessageID() {
+
+        Random random = new Random();
+
+        long number =
+                1000000000L
+                        + (long)
+                        (random.nextDouble()
+                                * 9000000000L);
+
+        return String.valueOf(number);
+    }
+
+    // =========================
+    // CREATE MESSAGE HASH
+    // =========================
+
+    public static String createMessageHash(
+            String messageID,
+            int messageNumber,
+            String message) {
+
+        String[] words =
+                message.trim().split("\\s+");
+
+        String firstWord =
+                words[0].toUpperCase();
+
+        String lastWord =
+                words[words.length - 1]
+                        .toUpperCase();
+
+        return messageID.substring(0, 2)
+                + ":"
+                + messageNumber
+                + ":"
+                + firstWord
+                + lastWord;
     }
 }
 

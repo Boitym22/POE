@@ -4,136 +4,139 @@
  */
 package chatapp;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
-/**
- *
- * @author Student
- */
 public class LoginTest {
-    
-    public LoginTest() {
-    }
-    
-    @BeforeAll
-    public static void setUpClass() {
-    }
-    
-    @AfterAll
-    public static void tearDownClass() {
-    }
-    
-    @BeforeEach
-    public void setUp() {
-    }
-    
-    @AfterEach
-    public void tearDown() {
+
+    // =========================
+    // USERNAME TESTS
+    // =========================
+
+    @Test
+    public void testCorrectUsername() {
+
+        assertTrue(ChatApp.checkUsername("kyl_1"));
     }
 
-    /**
-     * Test of main method, of class Login.
-     */
     @Test
-    public void testMain() {
-        System.out.println("main");
-        String[] args = null;
-        Login.main(args);
-        // TODO review the generated test code and remove the default call to fail.
-       
+    public void testIncorrectUsername() {
 
-    /**
-     * Test of checkUsername method, of class Login.
-     */
-    @Test
-    public void testCheckUsername() {
-        System.out.println("checkUsername");
-        String username = "";
-        Login instance = new Login();
-        boolean expResult = false;
-        boolean result = instance.checkUsername(username);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+        assertFalse(ChatApp.checkUsername("kyle!!!!"));
     }
 
-    /**
-     * Test of checkPasswordComplexity method, of class Login.
-     */
+    // =========================
+    // PASSWORD TESTS
+    // =========================
+
     @Test
-    public void testCheckPasswordComplexity() {
-        System.out.println("checkPasswordComplexity");
-        String password = "";
-        Login instance = new Login();
-        boolean expResult = false;
-        boolean result = instance.checkPasswordComplexity(password);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+    public void testCorrectPassword() {
+
+        assertTrue(ChatApp.checkPassword("Password@1"));
     }
 
-    /**
-     * Test of checkCellPhoneNumber method, of class Login.
-     */
     @Test
-    public void testCheckCellPhoneNumber() {
-        System.out.println("checkCellPhoneNumber");
-        String cell = "";
-        Login instance = new Login();
-        boolean expResult = false;
-        boolean result = instance.checkCellPhoneNumber(cell);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
+    public void testIncorrectPassword() {
+
+        assertFalse(ChatApp.checkPassword("password"));
     }
 
-    /**
-     * Test of registerUser method, of class Login.
-     */
+    // =========================
+    // CELLPHONE TESTS
+    // =========================
+
     @Test
-    public void testRegisterUser() {
-        System.out.println("registerUser");
-        String firstName = "";
-        String username = "";
-        String password = "";
-        String cell = "";
-        Login instance = new Login();
-        boolean expResult = false;
-        boolean result = instance.registerUser(firstName, username, password, cell);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        
+    public void testCorrectCellphone() {
+
+        assertTrue(ChatApp.checkCellphone("+27831234567"));
     }
 
-    /**
-     * Test of login method, of class Login.
-     */
     @Test
-    public void testLogin() {
-        System.out.println("login");
-        String loginUser = "";
-        String loginPass = "";
-        Login instance = new Login();
-        boolean expResult = false;
-        boolean result = instance.login(loginUser, loginPass);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        
+    public void testIncorrectCellphone() {
+
+        assertFalse(ChatApp.checkCellphone("0831234567"));
     }
 
-    /**
-     * Test of returnLoginStatus method, of class Login.
-     */
+    // =========================
+    // RECIPIENT TESTS
+    // =========================
+
     @Test
-    public void testReturnLoginStatus() {
-        System.out.println("returnLoginStatus");
-        boolean b = false;
-        Login instance = new Login();
-        boolean expResult = false;
-        boolean result = instance.returnLoginStatus(b);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        
-    }}}
+    public void testCorrectRecipient() {
+
+        String recipient = "+27685139480";
+
+        boolean valid =
+                recipient.matches("^\\+27\\d{9}$");
+
+        assertTrue(valid);
+    }
+
+    @Test
+    public void testIncorrectRecipient() {
+
+        String recipient = "0685139480";
+
+        boolean valid =
+                recipient.matches("^\\+27\\d{9}$");
+
+        assertFalse(valid);
+    }
+
+    // =========================
+    // MESSAGE LENGTH TESTS
+    // =========================
+
+    @Test
+    public void testMessageLengthSuccess() {
+
+        String message =
+                "Hello this is a short message";
+
+        boolean valid =
+                message.length() <= 250;
+
+        assertTrue(valid);
+    }
+
+    @Test
+    public void testMessageLengthFail() {
+
+        String message =
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
+        boolean valid =
+                message.length() <= 250;
+
+        assertFalse(valid);
+    }
+
+    // =========================
+    // MESSAGE ID TEST
+    // =========================
+
+    @Test
+    public void testGenerateMessageID() {
+
+        String id =
+                ChatApp.generateMessageID();
+
+        assertEquals(10, id.length());
+    }
+
+    // =========================
+    // HASH TEST
+    // =========================
+
+    @Test
+    public void testMessageHashCreation() {
+
+        String hash =
+                ChatApp.createMessageHash(
+                        "1234567890",
+                        1,
+                        "Hi thanks");
+
+        assertEquals("12:1:HITHANKS", hash);
+    }
+}
