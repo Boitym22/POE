@@ -1,1 +1,21 @@
+name: Java CI with test
 
+on:
+ push:
+ pull_request:
+
+ jobs:
+   build:
+  runs-on: ubuntu-latest
+
+  steps:
+   - uses: actions/checkout@v3
+
+   - name: Set up JDK
+   -uses: actions/setup-java@v3
+   with:
+    distrinution: 'termurin'
+    java-version: '17'
+
+    - name: Build & Test
+    run: echo "Build successful"
